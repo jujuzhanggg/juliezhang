@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Reid Hoffman Actually Uses AI — Prompting Techniques for Non-Technical People | Julie Zhang</title>
+<meta name="description" content="Reid Hoffman's AI prompting framework broken into 3 tiers: basic, medium, and advanced. Learn role-based perspective prompting, meta-prompting, and how to treat compute as an investment. No coding required.">
+<meta name="keywords" content="Reid Hoffman AI, Reid Hoffman prompting, AI prompting techniques, how to use AI, AI for non-technical people, prompt engineering beginner, role-based prompting, meta-prompting, AI tips 2026, LinkedIn founder AI">
+<meta name="author" content="Julie Zhang">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://juliezhanggg.com/reid-hoffman-ai-prompting.html">
+
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="How Reid Hoffman Actually Uses AI — Prompting Techniques for Non-Technical People">
+<meta property="og:description" content="The LinkedIn founder's AI prompting playbook in 3 tiers. Role-based prompting, meta-prompting, and more. No coding required.">
+<meta property="og:url" content="https://juliezhanggg.com/reid-hoffman-ai-prompting.html">
+<meta property="og:site_name" content="Julie Zhang">
+<meta property="article:published_time" content="2026-02-28">
+<meta property="article:author" content="Julie Zhang">
+<meta property="article:tag" content="AI Prompting">
+<meta property="article:tag" content="Reid Hoffman">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@juliezhanggg">
+<meta name="twitter:creator" content="@juliezhanggg">
+<meta name="twitter:title" content="How Reid Hoffman Actually Uses AI — A Non-Technical Guide">
+<meta name="twitter:description" content="Reid Hoffman's 3-tier AI prompting framework. Basic, medium, and advanced techniques anyone can use.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pink: #F2C4CE;
+  --yellow: #FBF0C4;
+  --mint: #C8E6D0;
+  --lilac: #D8C8E8;
+  --peach: #F5D5C8;
+  --sky: #C4D9ED;
+  --cream: #FDFBF8;
+  --dark: #3D3A4B;
+  --hot-pink: #E8A0B4;
+  --electric-blue: #A8C4E0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--cream);
+  color: var(--dark);
+  overflow-x: hidden;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 16px 32px;
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(253,251,248,0.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1.5px solid rgba(61,58,75,0.1);
+}
+nav .logo {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.6rem; font-style: italic;
+  letter-spacing: -0.02em; text-decoration: none; color: var(--dark);
+}
+nav .logo span {
+  display: inline-block; background: var(--pink); color: var(--dark);
+  padding: 2px 8px; transform: rotate(-2deg); margin-left: 4px; border-radius: 4px;
+}
+nav .back-link {
+  text-decoration: none; color: var(--dark); font-size: 0.8rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 6px 16px; border: 1.5px solid rgba(61,58,75,0.15); border-radius: 24px;
+  transition: all 0.2s;
+}
+nav .back-link:hover { background: var(--yellow); }
+
+/* HERO */
+.article-hero {
+  min-height: 50vh; display: flex; align-items: flex-end; justify-content: center;
+  padding: 140px 40px 60px; position: relative;
+  background: linear-gradient(135deg, var(--sky) 0%, var(--lilac) 40%, var(--pink) 100%);
+}
+.article-hero::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
+  background: linear-gradient(to top, var(--cream), transparent);
+}
+.hero-content {
+  max-width: 740px; position: relative; z-index: 2; text-align: center;
+}
+.hero-content .tag {
+  display: inline-block; font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em;
+  background: var(--dark); color: var(--cream); padding: 5px 14px;
+  border-radius: 4px; margin-bottom: 20px;
+}
+.hero-content h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1.1;
+  letter-spacing: -0.03em; margin-bottom: 20px;
+}
+.hero-content h1 em { color: var(--dark); opacity: 0.6; }
+.hero-content .subtitle {
+  font-size: 1.05rem; line-height: 1.65; color: rgba(61,58,75,0.7); max-width: 560px; margin: 0 auto;
+}
+.hero-content .meta {
+  margin-top: 24px; font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem; color: rgba(61,58,75,0.45); letter-spacing: 0.06em;
+}
+
+/* ARTICLE BODY */
+.article-body {
+  max-width: 700px; margin: 0 auto; padding: 60px 24px 100px;
+  font-size: 1.05rem; line-height: 1.8; color: #444;
+}
+.article-body p { margin-bottom: 24px; }
+.article-body strong { color: var(--dark); font-weight: 600; }
+.article-body a { color: var(--hot-pink); text-decoration: underline; text-underline-offset: 3px; }
+
+.article-body h2 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 2rem; color: var(--dark); letter-spacing: -0.02em;
+  margin: 56px 0 24px; line-height: 1.15;
+}
+.article-body h3 {
+  font-size: 1.25rem; font-weight: 700; color: var(--dark);
+  margin: 40px 0 16px; letter-spacing: -0.01em;
+}
+
+/* TIER CARDS */
+.tier-card {
+  border: 1.5px solid rgba(61,58,75,0.1); border-radius: 16px;
+  padding: 32px; margin: 32px 0; position: relative; overflow: hidden;
+  background: white; box-shadow: 0 2px 16px rgba(61,58,75,0.04);
+}
+.tier-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: var(--accent, var(--pink));
+}
+.tier-card .tier-label {
+  display: inline-block; font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em;
+  padding: 4px 12px; border-radius: 20px; margin-bottom: 16px;
+  background: var(--accent, var(--pink)); color: var(--dark); font-weight: 600;
+}
+.tier-card h3 {
+  font-family: 'Instrument Serif', serif; font-size: 1.6rem;
+  margin: 0 0 12px; letter-spacing: -0.02em; color: var(--dark);
+}
+.tier-card p { margin-bottom: 16px; }
+.tier-card .example-box {
+  background: var(--cream); border: 1px solid rgba(61,58,75,0.08);
+  border-radius: 10px; padding: 20px; margin-top: 16px;
+}
+.tier-card .example-box .ex-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+  text-transform: uppercase; letter-spacing: 0.12em; color: var(--hot-pink);
+  margin-bottom: 8px; font-weight: 600;
+}
+.tier-card .example-box p {
+  font-size: 0.92rem; line-height: 1.6; color: #555; margin-bottom: 0;
+  font-style: italic;
+}
+
+/* TECHNIQUE CARDS */
+.technique {
+  display: flex; gap: 16px; margin: 24px 0; padding: 20px;
+  background: white; border: 1.5px solid rgba(61,58,75,0.08);
+  border-radius: 12px; align-items: flex-start;
+  box-shadow: 0 1px 8px rgba(61,58,75,0.03);
+}
+.technique .num {
+  font-family: 'Instrument Serif', serif; font-size: 2.2rem;
+  color: var(--hot-pink); opacity: 0.4; line-height: 1; flex-shrink: 0;
+  min-width: 36px;
+}
+.technique h4 {
+  font-size: 1rem; font-weight: 700; margin-bottom: 6px; color: var(--dark);
+}
+.technique p { font-size: 0.92rem; line-height: 1.6; margin-bottom: 0; color: #555; }
+
+/* PULLQUOTE */
+.pullquote {
+  border-left: 3px solid var(--hot-pink);
+  padding: 20px 0 20px 28px; margin: 40px 0;
+  font-family: 'Instrument Serif', serif; font-size: 1.4rem;
+  line-height: 1.45; color: var(--dark); font-style: italic;
+}
+.pullquote .attr {
+  display: block; font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem; font-style: normal; color: #999;
+  margin-top: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+/* HIGHLIGHT BOX */
+.highlight-box {
+  background: linear-gradient(135deg, var(--yellow), var(--peach));
+  border-radius: 16px; padding: 32px; margin: 40px 0;
+}
+.highlight-box h4 {
+  font-family: 'Instrument Serif', serif; font-size: 1.3rem;
+  margin-bottom: 12px; color: var(--dark);
+}
+.highlight-box p { font-size: 0.95rem; line-height: 1.65; margin-bottom: 0; color: rgba(61,58,75,0.8); }
+
+/* FOOTER */
+.article-footer {
+  max-width: 700px; margin: 0 auto; padding: 0 24px 60px;
+  border-top: 1.5px solid rgba(61,58,75,0.1); padding-top: 32px;
+}
+.article-footer .author-card {
+  display: flex; align-items: center; gap: 20px;
+}
+.article-footer .author-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--lilac), var(--pink));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; flex-shrink: 0;
+}
+.article-footer .author-info h4 { font-size: 1rem; margin-bottom: 2px; }
+.article-footer .author-info p { font-size: 0.85rem; color: #888; }
+.article-footer .author-info a { color: var(--hot-pink); text-decoration: none; font-size: 0.82rem; }
+
+footer {
+  background: var(--dark); color: rgba(255,255,255,0.5);
+  text-align: center; padding: 32px; font-size: 0.8rem;
+  font-family: 'JetBrains Mono', monospace; letter-spacing: 0.04em;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  nav { padding: 12px 16px; }
+  .article-hero { padding: 120px 20px 40px; }
+  .article-body { padding: 40px 20px 80px; }
+  .technique { flex-direction: column; gap: 8px; }
+  .tier-card { padding: 24px; }
+}
+
+/* GRAIN */
+body::after {
+  content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 9999; opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ANIMATIONS */
+.fade-up {
+  opacity: 0; transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How Reid Hoffman Actually Uses AI — Prompting Techniques for Non-Technical People",
+  "description": "Reid Hoffman's AI prompting framework in 3 tiers: basic, medium, and advanced. Role-based perspective prompting, meta-prompting, and treating compute as investment.",
+  "author": {"@type": "Person", "name": "Julie Zhang", "url": "https://juliezhanggg.com"},
+  "publisher": {"@type": "Person", "name": "Julie Zhang"},
+  "datePublished": "2026-02-28",
+  "dateModified": "2026-02-28",
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://juliezhanggg.com/reid-hoffman-ai-prompting.html"},
+  "keywords": ["Reid Hoffman", "AI prompting", "prompt engineering", "AI for beginners", "role-based prompting", "meta-prompting"]
+}
+</script>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Julie<span>Zhang</span></a>
+  <a href="index.html#writing" class="back-link">&larr; All Writing</a>
+</nav>
+
+<!-- HERO -->
+<div class="article-hero">
+  <div class="hero-content">
+    <span class="tag">AI Process</span>
+    <h1>How Reid Hoffman Actually Uses AI <em>&mdash; and What You Can Steal</em></h1>
+    <p class="subtitle">
+      The LinkedIn founder's prompting playbook, broken down into three tiers anyone can learn. No coding required.
+    </p>
+    <p class="meta">Julie Zhang &middot; Feb 2026 &middot; 4 min read</p>
+  </div>
+</div>
+
+<!-- ARTICLE -->
+<article class="article-body">
+
+  <p class="fade-up">
+    Reid Hoffman shares a framework for how to actually get good at using AI. He breaks it into three tiers &mdash; basic, medium, and advanced. Here's the breakdown for non-technical people.
+  </p>
+
+  <!-- ==================== BASIC ==================== -->
+
+  <div class="tier-card fade-up" style="--accent: var(--mint);">
+    <span class="tier-label">Basic</span>
+    <h3>Make AI Pull Information &mdash; Don't Let It Guess</h3>
+    <p>
+      When you ask AI a question, it auto-generates an answer based on training data that could be 18 months old. Hoffman's most basic technique: <strong>prompt it to actually pull and search for current information</strong> instead of guessing from stale data. Tell it to search, cite sources, check recent data. That one shift makes everything more reliable.
+    </p>
+  </div>
+
+  <!-- ==================== MEDIUM ==================== -->
+
+  <div class="tier-card fade-up" style="--accent: var(--sky);">
+    <span class="tier-label">Medium</span>
+    <h3>Talk to All the Agents &mdash; Compare What Works</h3>
+    <p>
+      Don't use one AI. <strong>Talk to all the agents</strong> &mdash; ChatGPT, Claude, Gemini, whatever &mdash; then compare: what can we derive from what's working and what's not? Where do they agree? Where do they diverge? The disagreements are where the real insights hide.
+    </p>
+  </div>
+
+  <!-- ==================== ADVANCED ==================== -->
+
+  <div class="tier-card fade-up" style="--accent: var(--lilac);">
+    <span class="tier-label">Advanced</span>
+    <h3>Five Techniques That Change Everything</h3>
+  </div>
+
+  <div class="technique fade-up">
+    <div class="num">1</div>
+    <div>
+      <h4>Ask: What Additional Data Would Be Useful?</h4>
+      <p>
+        Don't just ask AI for an answer. Ask it: <strong>"What pulls from additional data that might be useful?"</strong> Let it suggest data sources you haven't thought of. Your data should include both internal data (your own notes, docs, past work) and external data (news, reports, public information). Feed both in.
+      </p>
+    </div>
+  </div>
+
+  <div class="technique fade-up">
+    <div class="num">2</div>
+    <div>
+      <h4>Compute Is an Investment</h4>
+      <p>
+        Think of it as a vector where AI is useful: <strong>spending $10K on compute could give you 15 different useful things</strong> that are each easily valuable on their own. A market analysis, a competitive brief, a strategy memo, a risk assessment. The ROI per dollar of compute is the metric that matters.
+      </p>
+    </div>
+  </div>
+
+  <div class="technique fade-up">
+    <div class="num">3</div>
+    <div>
+      <h4>Lead the AI, Then Let It Write Your Prompt</h4>
+      <p>
+        <strong>First</strong>, lead the AI agent by chatting about the research for a bit &mdash; give it context, tell it what you're exploring. <strong>Then</strong>, ask it to write you the right prompt to do all the right research. It gives you a 2-page prompt. <strong>Then</strong> you run that 2-page prompt. The result is dramatically better than anything you'd have typed yourself.
+      </p>
+    </div>
+  </div>
+
+  <div class="technique fade-up">
+    <div class="num">4</div>
+    <div>
+      <h4>Role-Based Perspective Prompting</h4>
+      <p>
+        Ask AI: <strong>"What would a technologist say? What would a VC say? What would a government policy person say? What would a nuclear safety person say? Are there other roles I haven't thought of?"</strong> Then ask it to adopt each role and give you the answers from that perspective. You get a full 360-degree view of any problem without hiring a single consultant.
+      </p>
+    </div>
+  </div>
+
+  <div class="highlight-box fade-up">
+    <h4>The Takeaway</h4>
+    <p>
+      Basic = make AI search instead of guess. Medium = talk to all the agents and compare what works. Advanced = ask what data you're missing, treat compute as investment, let AI write your prompts, and run every question through multiple expert perspectives.
+    </p>
+  </div>
+
+</article>
+
+<!-- AUTHOR FOOTER -->
+<div class="article-footer fade-up">
+  <div class="author-card">
+    <div class="author-avatar">&#x1F469;&#x200D;&#x1F4BB;</div>
+    <div class="author-info">
+      <h4>Julie Zhang</h4>
+      <p>AI Creative &middot; Builder &middot; Thinker</p>
+      <a href="https://instagram.com/julie_solartopia" target="_blank">@julie_solartopia</a>
+      &nbsp;&middot;&nbsp;
+      <a href="https://solartopia.land" target="_blank">solartopia.land</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2026 Julie Zhang &mdash; Made with AI, curated with taste.</p>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, index) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => { entry.target.classList.add('visible'); }, index * 80);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
